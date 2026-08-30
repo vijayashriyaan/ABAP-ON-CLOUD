@@ -1,0 +1,16 @@
+@EndUserText.label: 'Serivice Defination travel proceesor'
+define service ZATS_VJ_SD_M_TRAVEL {
+  expose ZATS_VJ_M_TRAVEL_PROCESSOR    as travel;
+  expose ZATS_VJ_M_BOOKING_PROCESSOR   as booking;
+  expose ZATS_VJ_M_BOOKSUPPL_PROCESSOR as booksuppl;
+  expose /DMO/I_Agency                 as agency;
+  expose /DMO/I_Customer               as customer;
+  expose I_Currency                    as currency;
+  expose /DMO/I_Overall_Status_VH      as travelstatus;
+  expose /DMO/I_Carrier                as Carrier;
+  expose /DMO/I_Connection             as Connection;
+  expose /DMO/I_Booking_Status_VH      as Bookingstatus;
+  expose /DMO/I_Flight                 as Flight;
+  expose /DMO/I_Supplement             as Supplement;
+  expose /DMO/I_SupplementText         as SupplementText;
+}
