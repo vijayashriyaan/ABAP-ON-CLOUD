@@ -5,7 +5,7 @@
    <DDLS>
     <DDLNAME>ZATS_VJ_M_BOOKSUPPL</DDLNAME>
     <DDLANGUAGE>E</DDLANGUAGE>
-    <DDTEXT>Booking Suplmentary as grndchild</DDTEXT>
+    <DDTEXT>Booking Supplement as grand child</DDTEXT>
     <SOURCE_TYPE>W</SOURCE_TYPE>
    </DDLS>
   </asx:values>

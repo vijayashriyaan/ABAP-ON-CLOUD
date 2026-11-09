@@ -1,59 +1,86 @@
 @AbapCatalog.viewEnhancementCategory: [#NONE]
 @AccessControl.authorizationCheck: #NOT_REQUIRED
-@EndUserText.label: 'Booking Entity as first chails of travel'
+@EndUserText.label: 'Booking entity as first child of the travel'
 @Metadata.ignorePropagatedAnnotations: true
+@VDM.viewType: #BASIC
 define view entity ZATS_VJ_M_BOOKING as select from /dmo/booking_m
-composition[1..*] of ZATS_VJ_M_BOOKSUPPL as _BOOKSUPPL 
-
-association to parent ZATS_VJ_M_R_TRAVEL as _TRAVEL on 
-$projection.TravelId = _TRAVEL.TravelId
-
-association [1] to /DMO/I_Customer as _customer on
-$projection.CustomerId =  _customer.CustomerID
-
-association [1] to /DMO/I_Carrier as _carrier on
-
-$projection.CarrierId =  _carrier.AirlineID
-
-association [1] to /DMO/I_Connection as _CONNECTION on
-$projection.CarrierId =  _CONNECTION.AirlineID and
-$projection.ConnectionId =  _CONNECTION.ConnectionID
-
-association[1] to I_Currency as _currency on 
-$projection.CurrencyCode = _currency.Currency
-
-association[1] to /DMO/I_Booking_Status_VH as _BOOKSTATUS on 
-$projection.BookingStatus = _BOOKSTATUS.BookingStatus
-
-
+composition[1..*] of ZATS_VJ_M_BOOKSUPPL as _BookSuppl
+--ask student whether the person is papa or not
+association to parent ZATS_VJ_M_TRAVEL as _Travel on
+    $projection.TravelId = _Travel.TravelId
+association[1] to /DMO/I_Customer as _Customer on
+    $projection.CustomerId = _Customer.CustomerID
+association[1] to /DMO/I_Carrier as _Carrier on
+    $projection.CarrierId = _Carrier.AirlineID
+association[1] to /DMO/I_Connection as _Connection on
+    $projection.CarrierId = _Connection.AirlineID and
+    $projection.ConnectionId = _Connection.ConnectionID
+association[1] to I_Currency as _Currency on
+    $projection.CurrencyCode = _Currency.Currency
+association[1] to /DMO/I_Booking_Status_VH as _BookStatus on
+    $projection.BookingStatus = _BookStatus.BookingStatus                
 {
-
-
-key travel_id as TravelId,
-key booking_id as BookingId,
-booking_date as BookingDate,
-customer_id as CustomerId,
-carrier_id as CarrierId,
-connection_id as ConnectionId,
-flight_date as FlightDate,
-@Semantics.amount.currencyCode: 'CurrencyCode'
-flight_price as FlightPrice,
-currency_code as CurrencyCode,
-booking_status as BookingStatus,
- @Semantics.systemDateTime.lastChangedAt: true
-last_changed_at as LastChangedAt,
-
-_customer,
-_carrier,
-_CONNECTION,
-_currency,
-_BOOKSTATUS,
-_TRAVEL,
-_BOOKSUPPL 
-
-
-
-
-
-    
+    key travel_id as TravelId,
+    key booking_id as BookingId,
+    booking_date as BookingDate,
+    @ObjectModel.text.element: [ 'CustomerName' ]
+    @Consumption.valueHelpDefinition: [
+                {
+                    entity.name: '/DMO/I_Customer',
+                    entity.element: 'CustomerID'
+                }
+    ]
+    customer_id as CustomerId,
+    _Customer.LastName as CustomerName,
+    @Consumption.valueHelpDefinition: [
+                {
+                    entity.name: '/DMO/I_Carrier',
+                    entity.element: 'AirlineID'
+                }
+    ]
+    @ObjectModel.text.element: [ 'AirlineName' ]
+    carrier_id as CarrierId,
+    _Carrier.Name as AirlineName,
+    @Consumption.valueHelpDefinition: [
+                {
+                    entity.name: '/DMO/I_Connection',
+                    entity.element: 'ConnectionID',
+                    additionalBinding: [
+                        { 
+                            element: 'AirlineID',
+                            localElement: 'CarrierId'
+                        }
+                    ]
+                }
+    ]
+    connection_id as ConnectionId,
+    flight_date as FlightDate,
+    @Semantics.amount.currencyCode: 'CurrencyCode'
+    flight_price as FlightPrice,
+    @Consumption.valueHelpDefinition: [
+                {
+                    entity.name: 'I_Currency',
+                    entity.element: 'Currency'
+                }
+    ]
+    currency_code as CurrencyCode,
+    @ObjectModel.text.element: [ 'BookingStatusText' ]
+    @Consumption.valueHelpDefinition: [
+                {
+                    entity.name: '/DMO/I_Booking_Status_VH',
+                    entity.element: 'BookingStatus'
+                }
+    ]
+    booking_status as BookingStatus,
+    _BookStatus._Text[ Language = $session.system_language ].Text as BookingStatusText,
+    @Semantics.systemDateTime.lastChangedAt: true
+    --todo: anubhav to say read only
+    last_changed_at as LastChangedAt,
+    _Customer,
+    _Carrier,
+    _Connection,
+    _Currency,
+    _BookStatus,
+    _Travel,
+    _BookSuppl
 }

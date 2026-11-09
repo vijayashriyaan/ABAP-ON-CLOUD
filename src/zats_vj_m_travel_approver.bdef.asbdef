@@ -1,0 +1,34 @@
+projection;
+strict ( 2 );
+use collaborative draft;
+
+define behavior for ZATS_VJ_M_TRAVEL_APPROVER alias Travel
+{
+  //use create;
+  use update;
+ // use delete;
+
+  //use action copyTravel;
+  //use action validateCustomer;
+  field (readonly) CustomerId, AgencyId, TotalPrice, BeginDate, EndDate, Description;
+
+  use action acceptTravel;
+  use action rejectTravel;
+
+  use action Prepare;
+  use action Edit;
+  use action Resume;
+  use action Activate;
+  use action Discard;
+  use action Share;
+
+  use association _Booking ;//{ create; with draft; }
+}
+
+define behavior for ZATS_VJ_M_BOOKING_APPROVER alias Booking
+{
+  //use update;
+  //use delete;
+
+  use association _Travel;
+}

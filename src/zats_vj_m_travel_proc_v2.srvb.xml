@@ -6,7 +6,7 @@
     <METADATA>
      <NAME>ZATS_VJ_M_TRAVEL_PROC_V2</NAME>
      <TYPE>SRVB/SVB</TYPE>
-     <DESCRIPTION>Servicebiniding for proce app V2</DESCRIPTION>
+     <DESCRIPTION>TRAVEL PROC SE BINDING ODATAV4</DESCRIPTION>
      <LANGUAGE>EN</LANGUAGE>
      <MASTER_LANGUAGE>EN</MASTER_LANGUAGE>
      <ABAP_LANGU_VERSION>5</ABAP_LANGU_VERSION>
@@ -25,9 +25,9 @@
          <SERVICE_VERSION>0001</SERVICE_VERSION>
          <RELEASE_STATE>NOT_RELEASED</RELEASE_STATE>
          <SRVD_REF>
-          <URI>/sap/bc/adt/ddic/srvd/sources/zats_vj_sd_m_travel</URI>
+          <URI>/sap/bc/adt/ddic/srvd/sources/zats_vj_sd_m_travelprojection</URI>
           <TYPE>SRVD/SRV</TYPE>
-          <NAME>ZATS_VJ_SD_M_TRAVEL</NAME>
+          <NAME>ZATS_VJ_SD_M_TRAVELPROJECTION</NAME>
          </SRVD_REF>
          <BIND_TYPE_DATA>
           <CONTENT>

@@ -1,0 +1,221 @@
+//greenfield where we want framework to generate basic impl. code
+managed implementation in class zbp_ats_VJ_m_travel unique;
+//managed implementation in class zbp_ats_ab_m_travel unique;
+//best practice which compile our code in strict mode 2
+strict ( 2 );
+
+//enable draft support
+with collaborative draft;
+
+//defining the behavior definition
+define behavior for ZATS_VJ_M_TRAVEL alias Travel
+//moving line here for travel behavior pool - amit's responsibility
+implementation in class zbp_ats_VJ_m_travel unique
+//because f/w will create code for CRUD, tell f/w which db table it has to interact
+persistent table /dmo/travel_m
+//which entity is considered as super entity for lock mechanism
+lock master
+
+//mention total etag
+total etag LastChangedAt
+
+//AUTHORITY-CHECK to ensure that a valid user is performing task on our Tx.
+authorization master ( instance )
+
+//declare draft table
+//for collab draft, add a view , quick fix to create it
+draft table zats_vj_dtravel query zats_vj_qtr
+
+//to manage concurrency control
+etag master LastChangedAt
+//early numbering to generate travel id
+early numbering
+//late numbering
+
+//ADDITIONAL SAVE FOR logging purpose
+with additional save
+{
+  //AUTHORITY-CHECK to ensure that a valid user is performing task on our Tx.
+  create ( authorization : global, precheck );
+  update ( precheck );
+  delete;
+
+  //enable draft actions - in future i can use code to trigger w/f, send email...
+  draft determine action Prepare;
+  draft action Edit;
+  draft action Resume;
+  draft action Activate;
+  draft action Discard;
+  draft action Share;
+
+  //static feature control
+  field ( readonly ) TravelId;
+  field ( mandatory ) begindate, enddate, description, agencyid, customerid;
+
+  //factory - instance bound - data action
+  factory action copyTravel[1];
+
+  action (features : instance) acceptTravel result[1] $self;
+  action (features : instance) rejectTravel result[1] $self;
+
+  //internal action = private method for reusability
+  internal action calcTotalPrice;
+
+
+  //determination that update my tx buffer during interaction (create, update)
+ // determination calculateTotalPrice on modify
+   determination calculateTotalPrice on save
+                        { create; field BookingFee, CurrencyCode; }
+
+  //validation - check business data before save
+  validation validateHeaderData on save { create; field customerid, agencyid, begindate, enddate; }
+
+  determine action validateCustomer { validation   validateHeaderData; }
+
+  //ui scenario - we want fiori to make a round trip to load total price whenever booking fee is updated
+  side effects {
+    field BookingFee affects field TotalPrice;
+    //we cannot trigger direct validation when user change the customer id
+    //since we want to validate data ON FLY while user is editing draft, and show relevant message
+    //we can create determine action and add it in side effect
+    determine action validateCustomer executed on field CustomerId affects messages;
+  }
+
+  //direct booking w/o a travel is not possible
+  //association _Booking { create; }
+  //dynamic feature control //
+  //association _Booking { create (features:instance); }
+ association _Booking { create (features:instance); with draft; }
+ association _Attachment { create; with draft; }
+  mapping for /dmo/travel_m{
+    travelid = travel_id;
+    agencyid = agency_id;
+    customerid = customer_id;
+    begindate = begin_date;
+    enddate = end_date;
+    totalprice = total_price;
+    bookingfee = booking_fee;
+    CurrencyCode = currency_code;
+    Description = description;
+    OverallStatus = overall_status;
+    CreatedBy = created_by;
+    CreatedAt = created_at;
+    LastChangedAt = last_changed_at;
+    LastChangedBy = last_changed_by;
+  }
+}
+
+define behavior for ZATS_VJ_M_BOOKING alias Booking
+//add a new line for new class pool so prachi can work with booking parallel to amit
+implementation in class zbp_ats_VJ_m_booking unique
+persistent table /dmo/booking_m
+
+//define table to store booking draft data
+draft table zats_vj_dbook
+lock dependent by _Travel
+authorization dependent by _Travel
+etag master LastChangedAt
+early numbering
+{
+  update;
+  delete;
+  field ( readonly ) TravelId, Bookingid;
+
+
+  field ( features:instance ) ConnectionId;
+
+  //determination that update my tx buffer during interaction (create, update)
+  determination calculateTotalPrice on modify
+                        { create; field FlightPrice, CurrencyCode; }
+
+    //ui scenario - we want fiori to make a round trip to load total price whenever booking fee is updated
+  side effects {
+    field FlightPrice affects field _Travel.TotalPrice;
+  }
+
+  association _Travel;
+  //association _BookSuppl { create; }
+   association _BookSuppl { create; with draft; }
+
+  mapping for /dmo/booking_m{
+    TravelId = travel_id;
+    BookingId = booking_id;
+    CustomerId = customer_id;
+    CarrierId = carrier_id;
+    ConnectionId = connection_id;
+    FlightDate = flight_date;
+    FlightPrice = flight_price;
+    CurrencyCode = currency_code;
+    BookingStatus = booking_status;
+    LastChangedAt = last_changed_at;
+  }
+}
+
+define behavior for ZATS_VJ_M_BOOKSUPPL alias BookSuppl
+implementation in class zbp_ats_vj_m_booksuppl unique
+persistent table /dmo/booksuppl_m
+
+draft table zats_vj_dsupp
+lock dependent by _Travel
+authorization dependent by _Travel
+etag master LastChangedAt
+early numbering
+{
+  update;
+  delete;
+  field ( readonly ) TravelId, BookingId, BookingSupplementId;
+  association _Travel;
+  association _Booking;
+
+   //determination that update my tx buffer during interaction (create, update)
+  determination calculateTotalPrice on modify
+                        { create;  field Price, CurrencyCode; }
+
+   //ui scenario - we want fiori to make a round trip to load total price whenever booking fee is updated
+  side effects {
+    field Price affects field _Travel.TotalPrice;
+  }
+
+  mapping for /dmo/booksuppl_m{
+    travelid = travel_id;
+    BookingId = booking_id;
+    BookingSupplementId = booking_supplement_id;
+    SupplementId = supplement_id;
+    price = price;
+    CurrencyCode = currency_code;
+    LastChangedAt = last_changed_at;
+  }
+
+}
+
+define behavior for ZATS_vj_M_TATTACH alias _Attachment
+//add a new line for new class pool so prachi can work with booking parallel to amit
+persistent table zats_vj_attch
+//define table to store booking draft data
+draft table zats_ab_datt
+lock dependent by _Travel
+authorization dependent by _Travel
+etag master LastChangedAt
+{
+  update;
+  delete;
+  field ( readonly  ) TravelId;
+  field ( numbering : managed ) id;
+
+  association _Travel {with draft;}
+
+  mapping for zats_ab_att{
+    TravelId = travel_id;
+    id = id;
+    Attachment = attachment;
+    Filename = filename;
+    Filetype = filetype;
+    Memo = memo;
+    LastChangedAt = last_changed_at;
+    LocalCreatedAt = local_created_at;
+    LocalCreatedBy = local_created_by;
+    LocalLastChangedAt = local_last_changed_at;
+    LocalLastChangedBy = local_last_changed_by;
+
+  }
+}

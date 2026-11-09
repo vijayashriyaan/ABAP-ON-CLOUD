@@ -1,0 +1,5 @@
+CLASS zbp_ats_vj_m_booking DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF zats_vj_m_travel.
+ENDCLASS.
+
+CLASS zbp_ats_vj_m_booking IMPLEMENTATION.
+ENDCLASS.
