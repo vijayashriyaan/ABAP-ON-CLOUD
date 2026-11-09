@@ -16,7 +16,22 @@
      <OBJECT>S_SERVICE</OBJECT>
      <OKFLAG>X</OKFLAG>
     </USOBX>
+    <USOBX>
+     <NAME>A0EC7C0F5A46D89D348858CCA022B8</NAME>
+     <TYPE>HT</TYPE>
+     <OBJECT>ZAT_VJ_MGR</OBJECT>
+     <OKFLAG>Y</OKFLAG>
+    </USOBX>
    </USOBX>
+   <USOBT>
+    <USOBT>
+     <NAME>A0EC7C0F5A46D89D348858CCA022B8</NAME>
+     <TYPE>HT</TYPE>
+     <OBJECT>ZAT_VJ_MGR</OBJECT>
+     <FIELD>ACTVT</FIELD>
+     <LOW>03</LOW>
+    </USOBT>
+   </USOBT>
    <USOBX_EXT>
     <item>
      <OBJECT>S_SERVICE</OBJECT>
@@ -32,7 +47,28 @@
      <EXCEP_TX>Okay</EXCEP_TX>
      <EXCEP_ICON>@08@</EXCEP_ICON>
     </item>
+    <item>
+     <OBJECT>ZAT_VJ_MGR</OBJECT>
+     <TTEXT>ZAT_VJ_MGR</TTEXT>
+     <OCLSS>CPAE</OCLSS>
+     <OKFLAG>Y</OKFLAG>
+     <DEVCLASS>ZATS_PKG_AOC_VJ</DEVCLASS>
+     <CI_TEXT>Check/Maintain</CI_TEXT>
+     <CH_TEXT>Check</CH_TEXT>
+     <PR_TEXT>Yes</PR_TEXT>
+     <EXCEP>3</EXCEP>
+     <EXCEP_TX>Okay</EXCEP_TX>
+     <EXCEP_ICON>@08@</EXCEP_ICON>
+    </item>
    </USOBX_EXT>
+   <USOBT_EXT>
+    <item>
+     <OBJECT>ZAT_VJ_MGR</OBJECT>
+     <TTEXT>ZAT_VJ_MGR</TTEXT>
+     <FIELD>ACTVT</FIELD>
+     <LOW>03</LOW>
+    </item>
+   </USOBT_EXT>
   </asx:values>
  </asx:abap>
 </abapGit>
