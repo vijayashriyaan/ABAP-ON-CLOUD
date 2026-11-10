@@ -1,0 +1,4 @@
+@EndUserText.label: 'Unmanaged senario service binding'
+define service ZATS_VJ_SD_U_TRAVEL {
+  expose ZATS_VJ_U_R_TRAVEL as travel;
+}

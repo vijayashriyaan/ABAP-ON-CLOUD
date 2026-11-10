@@ -1,0 +1,40 @@
+unmanaged implementation in class zbp_ats_vj_u_r_travel unique;
+strict ( 2 );
+
+define behavior for ZATS_VJ_U_R_TRAVEL alias Travel
+//late numbering
+lock master
+authorization master ( instance )
+etag master Lastchangedat
+{
+  create ( authorization : global );
+  update;
+  delete;
+  field ( readonly ) TravelId;
+  field ( mandatory ) AgencyId, CustomerId, BeginDate;
+
+
+
+
+  action ( features : instance ) set_booked_status result [1] $self;
+
+  mapping for /dmo/travel  control /dmo/s_travel_intx
+    {
+      travelid      = travel_id;
+      agencyid      = agency_id;
+      begindate     = begin_date;
+      enddate       = end_date;
+      customerid    = customer_id;
+      bookingfee    = booking_fee;
+      totalprice    = total_price;
+      CurrencyCode  = currency_code;
+      Status        = status;
+      memo          = description;
+      lastchangedat = lastchangedat;
+      Createdat     = createdat;
+    }
+
+
+
+
+}
