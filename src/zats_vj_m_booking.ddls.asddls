@@ -74,7 +74,7 @@ association[1] to /DMO/I_Booking_Status_VH as _BookStatus on
     booking_status as BookingStatus,
     _BookStatus._Text[ Language = $session.system_language ].Text as BookingStatusText,
     @Semantics.systemDateTime.lastChangedAt: true
-    --todo: anubhav to say read only
+    
     last_changed_at as LastChangedAt,
     _Customer,
     _Carrier,
