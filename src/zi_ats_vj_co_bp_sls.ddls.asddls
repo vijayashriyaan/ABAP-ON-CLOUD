@@ -21,5 +21,6 @@ $projection.buyer = _businespatner.BpId
     ProductName,
     ProductCategory,
    _businespatner.CompanyName,
-   _businespatner.country
+   _businespatner.Country
+   
 }

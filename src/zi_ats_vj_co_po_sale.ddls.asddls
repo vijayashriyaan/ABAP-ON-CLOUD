@@ -17,9 +17,10 @@ $projection. Product = _po.ProductId
     Uom,
     /* Associations */
  
-    _header.buyer as buyer,
+    _Header.buyer as buyer,
    
     _po.Name as ProductName,
     _po.Category as ProductCategory
+    
    
 }

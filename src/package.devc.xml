@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <DEVC>
-    <CTEXT>Vijaya Package</CTEXT>
+    <CTEXT>Vijaya abap on cloud</CTEXT>
     <LANGUAGE>E</LANGUAGE>
     <MASTERLANG>E</MASTERLANG>
     <SRV_CHECK>X</SRV_CHECK>
